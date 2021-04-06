@@ -1,0 +1,31 @@
+#board {
+    background-color: lightgray;
+    height: 512px;
+    width: 608px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .box {
+    height: 32px;
+    width: 32px;
+    float: left;
+  }
+
+  .wallBox {
+    background-color: gray;
+
+  }
+
+  .crateBox {
+    background-color: burlywood;
+  }
+
+  .player {
+    background-color: red;
+  }
+
+  .goal {
+    background-color: green;
+  }
+
