@@ -58,12 +58,6 @@ function checkKey(e) {
 
 function userIntent(moveDirection) {
   // test logging
-  //console.log(moveDirection);
-  //document.getElementById("keyLog").innerHTML = document.getElementsByClassName("player")[0].curPos;
-
-  //set current pos to calculate intent...
-  userWant = document.getElementsByClassName("player")[0].curPos;
-  document.getElementById("keyLog").innerHTML = userWant;
 
   switch (moveDirection) {
     case "UP":
@@ -72,7 +66,7 @@ function userIntent(moveDirection) {
       }
       break;
     case "DOWN":
-      if (Number(userWant[0]) < Number(tileMap01.height -1)) {
+      if (Number(userWant[0]) < Number(tileMap01.height - 1)) {
         userWant[0] = Number(userWant[0]) + Number(1);
       }
       break;
@@ -82,25 +76,39 @@ function userIntent(moveDirection) {
       }
       break;
     case "RIGHT":
-      if (Number(userWant[1]) < Number(tileMap01.width) -1) {
+      if (Number(userWant[1]) < Number(tileMap01.width) - 1) {
         userWant[1] = Number(userWant[1]) + Number(1);
       }
       break;
   }
   document.getElementById("targetLog").innerHTML = userWant;
+  move();
 }
 
 function move() {
-
-  //fortsätt här efter lunch
-
   
+  //hämta och skriv player position
+  var playerBox = document.getElementsByClassName("player")[0];
+  document.getElementById("keyLog").innerHTML = playerBox.curPos; //funkar
+  console.log(document.getElementsByClassName("player")[0]); //funkar
+  console.log(document.getElementsByClassName("player")[0].curPos); //funkar
+  
+  //next box meck
+  console.log(userWant);
+  console.log(document.getElementById(userWant));
+
+  //var nextBox = document.getElementById(userWant);
+
 
 
 
 }
 
 //------ run code lines ---------------------------------------------
+initBoard();
 document.getElementsByTagName("body")[0].style.backgroundColor = "darkgray";
 document.onkeydown = checkKey;
-initBoard();
+userWant = document.getElementsByClassName("player")[0].curPos;
+
+//debug
+document.getElementById("keyLog").innerHTML = document.getElementsByClassName("player")[0].curPos;
