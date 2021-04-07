@@ -1,26 +1,17 @@
 //------ global varibles ---------------------------------------
 const gameBoard = document.getElementById("board");
+var loopPos = [];
+var userWant = [];
 
-//------- functions and metods----------------------------------
+//------- Game setup----------------------------------
 
 function initBoard() {
-  var blackBoxBool = true;
-  //var boxWidth = tileMap01.width;
-  //var boxHeight = tileMap01.height;
-  var boxCode = "";
-
   console.log(tileMap01.width);
   console.log(tileMap01.height);
 
-  //För varje rad...
   for (let h = 0; h < tileMap01.height; ++h) {
-    console.log(h);
-
-    // för varje box på en viss rad.
     for (let w = 0; w < tileMap01.width; ++w) {
-      console.log(w);
-
-      //console.log(tileMap01.mapGrid[w][h][0]);
+      loopPos = [h, w];
       makeSokobanBox(tileMap01.mapGrid[h][w][0]);
     }
   }
@@ -28,8 +19,9 @@ function initBoard() {
 
 function makeSokobanBox(type) {
   var newBox = document.createElement("div");
+  newBox.curPos = loopPos;
   newBox.classList.add("box");
-  //console.log(type);
+  //console.log(newBox.curPos); // funkar!
 
   //assign props depending on box type
   switch (type) {
@@ -47,66 +39,66 @@ function makeSokobanBox(type) {
       break;
     default:
   }
-
   gameBoard.appendChild(newBox);
 }
 
-function move(offsetPos) {
-  var playerElement = document.getElementsByClassName("player")[0];
-  var playerNextElementId = Number(playerElement.id) + Number(offsetPos);
-  var playerNextBox = document.getElementById(playerNextElementId);
-  console.log(playerNextBox);
-
-  if (playerNextElementId !== 0 && playerNextElementId <= idCounter) {
-    playerElement.classList.toggle("player");
-    playerNextBox.classList.toggle("player");
-  }
-}
-
-function moveup() {
-  console.log("moveup");
-}
-
-function movedown() {
-  console.log("movedown");
-}
-
-function moveleft() {
-  console.log("moveleft");
-}
-
-function moveright() {
-  console.log("moveright");
-}
+//------- Game running----------------------------------
 
 function checkKey(e) {
-  //https://stackoverflow.com/questions/5597060/detecting-arrow-key-presses-in-javascript
   if (e.keyCode == "38") {
-    console.log("up arrow");
+    userIntent("UP");
   } else if (e.keyCode == "40") {
-    console.log("down arrow");
+    userIntent("DOWN");
   } else if (e.keyCode == "37") {
-    console.log("left arrow");
+    userIntent("LEFT");
   } else if (e.keyCode == "39") {
-    console.log("right arrow");
+    userIntent("RIGHT");
   }
 }
 
-//fortsätt här...
-function move(offsetPos) {
-    var playerElement = document.getElementsByClassName("player")[0];
-    var playerNextElementId = Number(playerElement.id) + Number(offsetPos);
-    var playerNextBox = document.getElementById(playerNextElementId);
-    console.log(playerNextBox);
+function userIntent(moveDirection) {
+  // test logging
+  //console.log(moveDirection);
+  //document.getElementById("keyLog").innerHTML = document.getElementsByClassName("player")[0].curPos;
 
-    if (playerNextElementId !== 0 && playerNextElementId <= idCounter) {
-        playerElement.classList.toggle("player");
-        playerNextBox.classList.toggle("player");
-    }
+  //set current pos to calculate intent...
+  userWant = document.getElementsByClassName("player")[0].curPos;
+  document.getElementById("keyLog").innerHTML = userWant;
+
+  switch (moveDirection) {
+    case "UP":
+      if (Number(userWant[0]) > Number(0)) {
+        userWant[0] = Number(userWant[0]) - Number(1);
+      }
+      break;
+    case "DOWN":
+      if (Number(userWant[0]) < Number(tileMap01.height -1)) {
+        userWant[0] = Number(userWant[0]) + Number(1);
+      }
+      break;
+    case "LEFT":
+      if (Number(userWant[1]) > Number(0)) {
+        userWant[1] = Number(userWant[1]) - Number(1);
+      }
+      break;
+    case "RIGHT":
+      if (Number(userWant[1]) < Number(tileMap01.width) -1) {
+        userWant[1] = Number(userWant[1]) + Number(1);
+      }
+      break;
+  }
+  document.getElementById("targetLog").innerHTML = userWant;
+}
+
+function move() {
+
+  //fortsätt här efter lunch
+
+  
+
 
 
 }
-
 
 //------ run code lines ---------------------------------------------
 document.getElementsByTagName("body")[0].style.backgroundColor = "darkgray";
