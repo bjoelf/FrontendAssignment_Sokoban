@@ -3,13 +3,13 @@ const gameBoard = document.getElementById("board");
 var playerpos = {
   w: -1,
   h: -1,
-  nextBox: function () {
-    console.log("hej!");
+  nextBox: function (x, y) {
+
   },
 };
+var starttime;
 
 //------- Game setup----------------------------------
-
 function initBoard() {
   for (let h = 0; h < tileMap01.height; ++h) {
     for (let w = 0; w < tileMap01.width; ++w) {
@@ -46,7 +46,6 @@ function makeSokobanBox(type, h, w) {
 }
 
 //------- Game running----------------------------------
-
 function checkKey(e) {
   if (e.keyCode == "38") {
     move(0, -1);
@@ -60,6 +59,14 @@ function checkKey(e) {
 }
 
 function move(x, y) {
+
+  //start clock at first keystroke
+if (typeof starttime === 'undefined') {
+  starttime = new Date();
+  console.log("set startclock");
+}
+
+
   //get net box
   var nextVertical = Number(playerpos.h) + Number(x);
   var nextHorisontal = Number(playerpos.w) + Number(y);
@@ -92,6 +99,7 @@ function move(x, y) {
         console.log("Move cratebox into goal area");
         doubleNextBox.classList.toggle("goalCrate");
 
+        //test if inside goal area
         if (nextBox.classList.contains("goal")) {
           console.log("Move cratebox inside goal area");
           nextBox.classList.toggle("goalCrate");
@@ -111,8 +119,15 @@ function move(x, y) {
     // If no wall, move player only.
     togglePlayer(playerBox, nextBox);
     updatePlayerPos(nextVertical, nextHorisontal);
+    SecondsSinceStart();
   }
   done();
+}
+
+function SecondsSinceStart() {
+  var now =  new Date();
+  var difference = Math.abs(now - starttime) / 1000;
+  document.getElementById("clock").innerHTML = difference;
 }
 
 function done() {
