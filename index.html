@@ -7,20 +7,19 @@
     <link rel="stylesheet" href="site.css" />
     <script src="SokobanBase.js"></script>
     <title>Sokoban Game</title>
+    <link rel="playericon" href="img/p.gif" />
   </head>
   <body>
+    <div style="text-align: center">
+      <h1>Sokoban Game</h1>
+      <p>Use the arrow keys ont the keyboard to move the player</p>
 
-    
-    <div style="text-align: center;">
-      <p>Use the arrow keys to move player</p>
+      <div id="board"></div>
 
+      <h2 id="win" >Goals left:</h2>
+      <p id="goalsleft"></p>
 
     </div>
-
-    <div id="board"></div>
-
-    <div><p>Player box: </p> <p id=keyLog></p></div>
-    <div><p>Target box: </p> <p id=targetLog></p></div>
 
     <script src="scripts.js"></script>
   </body>

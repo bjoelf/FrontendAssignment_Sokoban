@@ -13,19 +13,31 @@
   }
 
   .wallBox {
-    background-color: gray;
-
+    /* background-color: gray; */
+    background-image: url(img/w.gif);
+    background-size: 32px;
   }
 
   .crateBox {
-    background-color: burlywood;
+    /* background-color: burlywood; */
+    background-image: url(img/c.gif);
+    background-size: 32px;
+  }
+  
+  .goal {
+    /*background-color: green; */
+    background-image: url(img/g.gif);
+    background-size: 32px;
+  }
+  
+  .goalCrate {
+    background-image: url(img/cg.gif);
+    background-size: 32px;
   }
 
   .player {
-    background-color: red;
-  }
-
-  .goal {
-    background-color: green;
+    /* background-color: red; */
+    background-image: url(img/p.gif);
+    background-size: 32px;
   }
 

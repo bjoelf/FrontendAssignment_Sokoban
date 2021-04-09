@@ -1,38 +1,41 @@
 //------ global varibles ---------------------------------------
 const gameBoard = document.getElementById("board");
-var loopPos = [];
-var userWant = [];
+var playerpos = {
+  w: -1,
+  h: -1,
+  nextBox: function () {
+    console.log("hej!");
+  },
+};
 
 //------- Game setup----------------------------------
 
 function initBoard() {
-  console.log(tileMap01.width);
-  console.log(tileMap01.height);
-
   for (let h = 0; h < tileMap01.height; ++h) {
     for (let w = 0; w < tileMap01.width; ++w) {
-      loopPos = [h, w];
-      makeSokobanBox(tileMap01.mapGrid[h][w][0]);
+      makeSokobanBox(tileMap01.mapGrid[h][w][0], h, w);
     }
   }
 }
 
-function makeSokobanBox(type) {
+function makeSokobanBox(type, h, w) {
   var newBox = document.createElement("div");
-  newBox.curPos = loopPos;
+  newBox.id = "h" + h + "w" + w;
+
   newBox.classList.add("box");
-  //console.log(newBox.curPos); // funkar!
 
   //assign props depending on box type
   switch (type) {
+    case "P":
+      newBox.classList.add("player");
+      playerpos.w = w;
+      playerpos.h = h;
+      break;
     case "W":
       newBox.classList.add("wallBox");
       break;
     case "B":
       newBox.classList.add("crateBox");
-      break;
-    case "P":
-      newBox.classList.add("player");
       break;
     case "G":
       newBox.classList.add("goal");
@@ -46,69 +49,91 @@ function makeSokobanBox(type) {
 
 function checkKey(e) {
   if (e.keyCode == "38") {
-    userIntent("UP");
+    move(0, -1);
   } else if (e.keyCode == "40") {
-    userIntent("DOWN");
+    move(0, 1);
   } else if (e.keyCode == "37") {
-    userIntent("LEFT");
+    move(-1, 0);
   } else if (e.keyCode == "39") {
-    userIntent("RIGHT");
+    move(1, 0);
   }
 }
 
-function userIntent(moveDirection) {
-  // test logging
+function move(x, y) {
+  //get net box
+  var nextVertical = Number(playerpos.h) + Number(x);
+  var nextHorisontal = Number(playerpos.w) + Number(y);
+  var nextId = "h" + nextHorisontal + "w" + nextVertical;
 
-  switch (moveDirection) {
-    case "UP":
-      if (Number(userWant[0]) > Number(0)) {
-        userWant[0] = Number(userWant[0]) - Number(1);
-      }
-      break;
-    case "DOWN":
-      if (Number(userWant[0]) < Number(tileMap01.height - 1)) {
-        userWant[0] = Number(userWant[0]) + Number(1);
-      }
-      break;
-    case "LEFT":
-      if (Number(userWant[1]) > Number(0)) {
-        userWant[1] = Number(userWant[1]) - Number(1);
-      }
-      break;
-    case "RIGHT":
-      if (Number(userWant[1]) < Number(tileMap01.width) - 1) {
-        userWant[1] = Number(userWant[1]) + Number(1);
-      }
-      break;
-  }
-  document.getElementById("targetLog").innerHTML = userWant;
-  move();
-}
-
-function move() {
-  
-  //hämta och skriv player position
+  //get player element and next element
   var playerBox = document.getElementsByClassName("player")[0];
-  document.getElementById("keyLog").innerHTML = playerBox.curPos; //funkar
-  console.log(document.getElementsByClassName("player")[0]); //funkar
-  console.log(document.getElementsByClassName("player")[0].curPos); //funkar
-  
-  //next box meck
-  console.log(userWant);
-  console.log(document.getElementById(userWant));
+  var nextBox = document.getElementById(nextId);
 
-  //var nextBox = document.getElementById(userWant);
+  //Game start
+  console.log("Start game logic");
+  if (
+    nextBox.classList.contains("crateBox") ||
+    nextBox.classList.contains("goalCrate")
+  ) {
+    console.log("Try push cratebox");
+    var doubleNextVertical = Number(playerpos.h) + Number(x * 2);
+    var doubleNextHorisontal = Number(playerpos.w) + Number(y * 2);
+    var doubleNextId = "h" + doubleNextHorisontal + "w" + doubleNextVertical;
+    var doubleNextBox = document.getElementById(doubleNextId);
 
+    // Only move cratebox if no wall, crate nor goalcrate behind...
+    if (
+      !doubleNextBox.classList.contains("wallBox") &&
+      !doubleNextBox.classList.contains("crateBox") &&
+      !doubleNextBox.classList.contains("goalCrate")
+    ) {
+      //test if goal behind box, toggle some css.
+      if (doubleNextBox.classList.contains("goal")) {
+        console.log("Move cratebox into goal area");
+        doubleNextBox.classList.toggle("goalCrate");
 
+        if (nextBox.classList.contains("goal")) {
+          console.log("Move cratebox inside goal area");
+          nextBox.classList.toggle("goalCrate");
+          nextBox.classList.toggle("crateBox");
+        }
+      } else {
+        //no goal in sight, move crate
+        doubleNextBox.classList.toggle("crateBox");
+      }
+      nextBox.classList.toggle("crateBox");
+      togglePlayer(playerBox, nextBox);
+      updatePlayerPos(nextVertical, nextHorisontal);
+    }
+  } else if (!nextBox.classList.contains("wallBox")) {
+    console.log("Move player only");
 
+    // If no wall, move player only.
+    togglePlayer(playerBox, nextBox);
+    updatePlayerPos(nextVertical, nextHorisontal);
+  }
+  done();
+}
 
+function done() {
+  var remain = document.getElementsByClassName("goal").length - document.getElementsByClassName("goalCrate").length;
+  document.getElementById("goalsleft").innerHTML = remain;
+  if (remain == 0 ) {
+    document.getElementById("win").innerHTML = "You won!!";
+  }
+  console.log(remain);
+}
+
+function togglePlayer(boxP, boxN) {
+  boxP.classList.toggle("player");
+  boxN.classList.toggle("player");
+}
+function updatePlayerPos(nV, nH) {
+  playerpos.h = nV;
+  playerpos.w = nH;
 }
 
 //------ run code lines ---------------------------------------------
 initBoard();
 document.getElementsByTagName("body")[0].style.backgroundColor = "darkgray";
 document.onkeydown = checkKey;
-userWant = document.getElementsByClassName("player")[0].curPos;
-
-//debug
-document.getElementById("keyLog").innerHTML = document.getElementsByClassName("player")[0].curPos;
